@@ -2,7 +2,8 @@ package org.triBhaskar.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,20 @@ import redis.clients.jedis.timeseries.DuplicatePolicy;
 import redis.clients.jedis.timeseries.TSCreateParams;
 import redis.clients.jedis.timeseries.TSElement;
 import redis.clients.jedis.timeseries.TSInfo;
+import org.triBhaskar.model.CoinInfo;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
-@Slf4j
 public class CoinsDataService {
+
     public static final String GET_COINS_API = "https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers=1&orderBy=marketCap&orderDirection=desc&limit=50&offset=0";
     public static final String GET_COIN_HISTORY_API = "https://coinranking1.p.rapidapi.com/coin/";
     public static final String COIN_HISTORY_TIME_PERIOD_PARAM = "/history?timePeriod=";
     public static final List<String> timePeriods = List.of("24h", "7d", "30d","3m","1y", "3y");
     public static final String REDIS_KEY_COINS = "coins";
+    private static final Logger log = LoggerFactory.getLogger(CoinsDataService.class);
     @Autowired
     private RestTemplate restTemplate;
     @Autowired

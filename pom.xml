@@ -43,14 +43,6 @@
             <version>5.0.0</version>
         </dependency>
 
-        <!-- release -->
-        <!-- https://mvnrepository.com/artifact/io.github.dengliming.redismodule/all -->
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson</artifactId>-->
-<!--            <version>3.20.0</version>-->
-<!--        </dependency>-->
-
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -63,7 +55,11 @@
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
 
     </dependencies>
 <build>
