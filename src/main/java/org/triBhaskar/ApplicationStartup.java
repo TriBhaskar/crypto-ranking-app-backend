@@ -13,7 +13,11 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private CoinsDataService coinsDataService;
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        //            coinsDataService.fetchCoins();
+//        try {
+//            coinsDataService.fetchCoins();
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
 //        coinsDataService.fetchCoinHistory();
 
     }

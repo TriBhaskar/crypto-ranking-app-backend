@@ -51,7 +51,11 @@ public class CoinsDataService {
         allCoins.forEach(coinInfo -> {
             timePeriods.forEach(s -> {
                 fetchCoinHistoryForTimePeriod(coinInfo, s);
-//                    Thread.sleep(200); // To Avoid Rate Limit of rapid API of 5 Request/Sec
+                try {
+                    Thread.sleep(200); // To Avoid Rate Limit of rapid API of 5 Request/Sec
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             });
         });
     }

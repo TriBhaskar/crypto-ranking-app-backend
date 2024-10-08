@@ -13,7 +13,7 @@ import redis.clients.jedis.timeseries.TSElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/coins")
 @Slf4j
