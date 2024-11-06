@@ -11,6 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.triBhaskar.auth.entity.User;
 import org.triBhaskar.auth.jwt.JwtTokenProvider;
+import org.triBhaskar.auth.jwt.Role;
+import org.triBhaskar.auth.model.AuthResponse;
+import org.triBhaskar.auth.model.LoginRequest;
+import org.triBhaskar.auth.model.RegisterRequest;
 import org.triBhaskar.auth.repository.UserRepository;
 
 import java.util.Collections;
@@ -46,7 +50,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRoles(Role.ROLE_USER);
 
         return userRepository.save(user);
     }
@@ -63,14 +67,6 @@ public class AuthService {
 
         String jwt = tokenProvider.generateToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
-
-        // Store refresh token in Redis
-        redisTemplate.opsForValue().set(
-                "refresh_token:" + authentication.getName(),
-                refreshToken,
-                refreshExpiration,
-                TimeUnit.MILLISECONDS
-        );
 
         return new AuthResponse(jwt, refreshToken);
     }
@@ -96,19 +92,12 @@ public class AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getUsername(),
                 null,
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()))
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRoles().toString()))
         );
 
         String newAccessToken = tokenProvider.generateToken(authentication);
         String newRefreshToken = tokenProvider.generateRefreshToken(authentication);
 
-        // Update refresh token in Redis
-        redisTemplate.opsForValue().set(
-                "refresh_token:" + username,
-                newRefreshToken,
-                refreshExpiration,
-                TimeUnit.MILLISECONDS
-        );
 
         return new AuthResponse(newAccessToken, newRefreshToken);
     }

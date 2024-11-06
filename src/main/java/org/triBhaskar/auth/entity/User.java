@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import org.triBhaskar.auth.jwt.Role;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,9 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "active")
     private boolean active = true;
@@ -114,20 +118,20 @@ public class User {
         this.lastName = lastName;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public String getPhoneNumber() {
@@ -144,6 +148,14 @@ public class User {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Role roles) {
+        this.roles = Collections.singleton(roles);
     }
 
     public LocalDateTime getLastLoginDate() {

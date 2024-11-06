@@ -5,11 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class HistoryData {
     private String timestamp;
     private double value;
+
+    public HistoryData(String s, double round) {
+        timestamp = s;
+        value = round;
+    }
 
     public String getTimestamp() {
         return timestamp;
