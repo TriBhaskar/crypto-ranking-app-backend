@@ -1,12 +1,10 @@
-package org.triBhaskar.scheduler;
+package org.triBhaskar.coin.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.triBhaskar.service.CoinsDataService;
+import org.triBhaskar.coin.service.CoinsDataService;
 
 @Component
 public class CoinApiScheduler {

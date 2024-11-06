@@ -1,4 +1,4 @@
-package org.triBhaskar.service;
+package org.triBhaskar.coin.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.triBhaskar.model.*;
+import org.triBhaskar.coin.model.*;
 import org.triBhaskar.utils.HttpUtils;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.json.Path;
@@ -17,7 +17,6 @@ import redis.clients.jedis.timeseries.DuplicatePolicy;
 import redis.clients.jedis.timeseries.TSCreateParams;
 import redis.clients.jedis.timeseries.TSElement;
 import redis.clients.jedis.timeseries.TSInfo;
-import org.triBhaskar.model.CoinInfo;
 
 import java.util.List;
 import java.util.Map;

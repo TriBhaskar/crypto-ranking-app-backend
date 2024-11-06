@@ -1,12 +1,12 @@
-package org.triBhaskar.service;
+package org.triBhaskar.auth.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.triBhaskar.entity.RefreshToken;
+import org.triBhaskar.auth.entity.RefreshToken;
 import org.triBhaskar.exception.TokenRefreshException;
-import org.triBhaskar.repository.RefreshTokenRepository;
-import org.triBhaskar.repository.UserRepository;
+import org.triBhaskar.auth.repository.RefreshTokenRepository;
+import org.triBhaskar.auth.repository.UserRepository;
 
 import java.time.Instant;
 import java.util.UUID;

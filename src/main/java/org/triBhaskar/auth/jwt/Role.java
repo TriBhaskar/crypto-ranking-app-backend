@@ -1,4 +1,4 @@
-package org.triBhaskar.jwt;
+package org.triBhaskar.auth.jwt;
 
 public enum Role {
     ROLE_USER,

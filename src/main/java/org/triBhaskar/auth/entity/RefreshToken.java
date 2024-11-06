@@ -1,4 +1,4 @@
-package org.triBhaskar.entity;
+package org.triBhaskar.auth.entity;
 
 import jakarta.persistence.*;
 

@@ -1,12 +1,12 @@
-package org.triBhaskar.controller;
+package org.triBhaskar.coin.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.triBhaskar.model.CoinInfo;
-import org.triBhaskar.model.HistoryData;
-import org.triBhaskar.service.CoinsDataService;
+import org.triBhaskar.coin.controller.model.CoinInfo;
+import org.triBhaskar.coin.controller.model.HistoryData;
+import org.triBhaskar.coin.service.CoinsDataService;
 import org.triBhaskar.utils.Utility;
 import redis.clients.jedis.timeseries.TSElement;
 

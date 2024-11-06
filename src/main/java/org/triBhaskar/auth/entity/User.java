@@ -1,11 +1,11 @@
-package org.triBhaskar.entity;
+package org.triBhaskar.auth.entity;
 
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.triBhaskar.jwt.Role;
+import org.triBhaskar.auth.jwt.Role;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
