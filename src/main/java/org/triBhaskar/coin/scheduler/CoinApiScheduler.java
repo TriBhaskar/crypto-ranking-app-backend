@@ -11,7 +11,10 @@ public class CoinApiScheduler {
     @Autowired
     private CoinsDataService coinsDataService;
 
-    @Scheduled(cron = "0 0/30 * 1/1 * ?")
+//    @Scheduled(cron = "0 0/30 * 1/1 * ?")
+    //once a month cron
+
+    @Scheduled(cron = "0 0 0 1 * ?")
     public void getCoinDataToRedis(){
         try {
             coinsDataService.fetchCoins();
