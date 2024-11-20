@@ -5,14 +5,13 @@ import java.time.LocalDateTime;
 public class RegisterResponse {
     private String status;
     private String message;
-    private Long userId;
+    private String username;
     private LocalDateTime timestamp;
 
-
-    public RegisterResponse(String status, String message, Long userId, LocalDateTime timestamp) {
+    public RegisterResponse(String status, String message, String username, LocalDateTime timestamp) {
         this.status = status;
         this.message = message;
-        this.userId = userId;
+        this.username = username;
         this.timestamp = timestamp;
     }
 
@@ -32,12 +31,12 @@ public class RegisterResponse {
         this.message = message;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LocalDateTime getTimestamp() {
@@ -53,7 +52,7 @@ public class RegisterResponse {
         return "RegisterResponse{" +
                 "status='" + status + '\'' +
                 ", message='" + message + '\'' +
-                ", userId=" + userId +
+                ", username='" + username + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
     }
