@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.triBhaskar.auth.entity.CoinUser;
 import org.triBhaskar.auth.model.LoginRequest;
+import org.triBhaskar.auth.model.LoginResponse;
 import org.triBhaskar.auth.model.RegisterRequest;
 import org.triBhaskar.auth.model.RegisterResponse;
 import org.triBhaskar.auth.service.UserService;
@@ -26,8 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RegisterResponse> login(@RequestBody LoginRequest loginRequest) {
-        CoinUser coinUser = userService.loginUser(loginRequest);
-        return ResponseEntity.ok(new RegisterResponse("success", "User logged in successfully", coinUser.getUsername(), LocalDateTime.now()));
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
+
+        //return ResponseEntity.ok(new LoginResponse("success", "User logged in successfully", coinUser.getUsername(), LocalDateTime.now()));
     }
 }
