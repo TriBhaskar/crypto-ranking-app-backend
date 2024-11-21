@@ -58,21 +58,29 @@ public class UserService {
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
-        // check if user exists
-        if (!userRepository.existsByUsername(loginRequest.getUsername())) {
-            throw new UserNotFoundException("Username does not exist");
+        Optional<CoinUser> user;
+
+        if (loginRequest.getIdentifier() != null && !loginRequest.getIdentifier().isEmpty()) {
+            user = userRepository.findByEmail(loginRequest.getIdentifier());
+            if (user.isEmpty()) {
+                user = userRepository.findByUsername(loginRequest.getIdentifier());
+                if (user.isEmpty()) {
+                    throw new UserNotFoundException("User does not exist");
+                }
+            }
+        } else {
+            throw new InvalidCredentialsException("Identifier must be provided");
         }
-        // check if password is correct
-        Optional<CoinUser> user = userRepository.findByUsername(loginRequest.getUsername());
+
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
             throw new InvalidCredentialsException("Password is incorrect");
         }
+
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(user.get().getUsername(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new LoginResponse("success", "User logged in successfully", loginRequest.getUsername(), tokenProvider.generateToken(authentication)
-        , LocalDateTime.now());
 
+        return new LoginResponse("success", "User logged in successfully", user.get().getUsername(), tokenProvider.generateToken(authentication), LocalDateTime.now());
     }
 }
