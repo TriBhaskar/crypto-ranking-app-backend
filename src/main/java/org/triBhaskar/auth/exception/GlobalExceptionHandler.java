@@ -57,4 +57,10 @@ public class GlobalExceptionHandler extends RuntimeException {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(ToMannyAttemptsException.class)
+    public ResponseEntity<ErrorResponse> handleToMannyAttemptsException(ToMannyAttemptsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
+        return new ResponseEntity<>(errorResponse, HttpStatus.TOO_MANY_REQUESTS);
+    }
 }

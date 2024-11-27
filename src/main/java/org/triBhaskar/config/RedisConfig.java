@@ -30,7 +30,9 @@ public class RedisConfig {
                     throw new RuntimeException("Failed to connect to Redis after " + maxRetries + " attempts", e);
                 }
                 try {
-                    Thread.sleep(120000); // Wait for 2 minutes before retrying
+                    log.warn("Failed to connect to Redis.... Retrying connection to Redis");
+                    //sleep for 30 seconds before retrying
+                    Thread.sleep(30000);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("Thread interrupted during sleep", ie);

@@ -8,10 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.triBhaskar.auth.entity.CoinUser;
-import org.triBhaskar.auth.exception.EmailAlreadyExistsException;
-import org.triBhaskar.auth.exception.InvalidCredentialsException;
-import org.triBhaskar.auth.exception.UserAlreadyExistsException;
-import org.triBhaskar.auth.exception.UserNotFoundException;
+import org.triBhaskar.auth.exception.*;
 import org.triBhaskar.auth.jwt.JwtTokenProvider;
 import org.triBhaskar.auth.jwt.Role;
 import org.triBhaskar.auth.model.LoginRequest;
@@ -21,6 +18,7 @@ import org.triBhaskar.auth.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -36,6 +34,12 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private TokenService tokenService;
 
     public CoinUser registerUser(RegisterRequest registerRequest) {
         // check if user exists
@@ -83,4 +87,48 @@ public class UserService {
 
         return new LoginResponse("success", "User logged in successfully", user.get().getUsername(), tokenProvider.generateToken(authentication), LocalDateTime.now());
     }
+
+    public void forgotPassword(String email) {
+        Optional<CoinUser> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            // Check rate limiting
+            if (tokenService.isRateLimited(email)) {
+                throw new ToMannyAttemptsException("Too many password reset attempts. Please try again later.");
+            }
+
+            String token = UUID.randomUUID().toString();
+            tokenService.saveToken(email, token);
+
+            try {
+                emailService.sendPasswordResetEmail(user.get().getEmail(), token);
+            } catch (Exception e) {
+                tokenService.deleteToken(token);
+                throw new RuntimeException("Failed to process password reset request");
+            }
+        } else {
+            throw new UserNotFoundException("User does not exist with the provided email");
+        }
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        String email = tokenService.getEmailFromToken(token);
+
+        if (email == null) {
+            throw new RuntimeException("Invalid or expired password reset link");
+        }
+
+        Optional<CoinUser> user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Update password
+        user.get().setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user.get());
+
+        // Invalidate token
+        tokenService.deleteToken(token);
+    }
+
 }
