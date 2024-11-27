@@ -1,7 +1,6 @@
 package org.triBhaskar.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.triBhaskar.auth.entity.CoinUser;
@@ -30,17 +29,22 @@ public class UserController {
     }
     @PostMapping("/test")
     public ResponseEntity<ApiResponse> testmore(@RequestBody String test) {
+        System.out.println("Tested successfully");
         return ResponseEntity.ok(new ApiResponse("success", "Tested successfully"));
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse> forgotPassword(@RequestBody String email, @RequestBody String resetpwdUrl) {
-        System.out.println("enjoo");
-            userService.forgotPassword(email.trim());
-            return ResponseEntity.ok(new ApiResponse(
-                    "success",
-                    "If the email exists in our system, a password reset link will be sent"
-            ));
+    public ResponseEntity<ApiResponse> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        String email = request.getEmail();
+        String resetPwdUrl = request.getResetPwdUrl();
+
+        userService.forgotPassword(email.trim(), resetPwdUrl);
+
+        return ResponseEntity.ok(new ApiResponse(
+                "success",
+                "If the email exists in our system, a password reset link will be sent"
+        ));
+
     }
 
     @PostMapping("/reset-password")

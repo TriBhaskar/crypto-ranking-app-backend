@@ -11,6 +11,7 @@ import org.triBhaskar.auth.entity.CoinUser;
 import org.triBhaskar.auth.exception.*;
 import org.triBhaskar.auth.jwt.JwtTokenProvider;
 import org.triBhaskar.auth.jwt.Role;
+import org.triBhaskar.auth.model.ApiResponse;
 import org.triBhaskar.auth.model.LoginRequest;
 import org.triBhaskar.auth.model.LoginResponse;
 import org.triBhaskar.auth.model.RegisterRequest;
@@ -88,7 +89,7 @@ public class UserService {
         return new LoginResponse("success", "User logged in successfully", user.get().getUsername(), tokenProvider.generateToken(authentication), LocalDateTime.now());
     }
 
-    public void forgotPassword(String email) {
+    public void forgotPassword(String email, String resetPwdUrl) {
         Optional<CoinUser> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
@@ -101,10 +102,10 @@ public class UserService {
             tokenService.saveToken(email, token);
 
             try {
-                emailService.sendPasswordResetEmail(user.get().getEmail(), token);
+                emailService.sendPasswordResetEmail(user.get().getEmail(), token, resetPwdUrl);
             } catch (Exception e) {
                 tokenService.deleteToken(token);
-                throw new RuntimeException("Failed to process password reset request");
+                throw new FailedToSendEmailException("Failed to send password reset email");
             }
         } else {
             throw new UserNotFoundException("User does not exist with the provided email");

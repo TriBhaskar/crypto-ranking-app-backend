@@ -12,20 +12,19 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public boolean sendPasswordResetEmail(String to, String token) {
+    public void sendPasswordResetEmail(String to, String token, String resetPwdUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Password Reset Request");
         message.setText("To reset your password, click the link below:\n\n" +
-                "http://your-frontend-url/reset-password?token=" + token);
+                resetPwdUrl+"?token=" + token);
 
         try {
             mailSender.send(message);
-            return true; // Email sent successfully
+            System.out.println("Email sent successfully");
         } catch (MailException e) {
-            // Log the exception (optional)
             System.err.println("Failed to send email: " + e.getMessage());
-            return false; // Email not sent
+            throw new RuntimeException("Failed to process password reset request");
         }
     }
 }

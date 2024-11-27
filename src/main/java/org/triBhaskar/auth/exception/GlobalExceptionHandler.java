@@ -63,4 +63,10 @@ public class GlobalExceptionHandler extends RuntimeException {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
         return new ResponseEntity<>(errorResponse, HttpStatus.TOO_MANY_REQUESTS);
     }
+
+    @ExceptionHandler(FailedToSendEmailException.class)
+    public ResponseEntity<ErrorResponse> handleFailedToSendEmailException(FailedToSendEmailException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.GATEWAY_TIMEOUT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
+    }
 }
