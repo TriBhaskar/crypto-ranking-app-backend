@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler extends RuntimeException {
 
     static class ErrorResponse {
-        private String message;
-        private HttpStatus status;
-        private LocalDateTime timestamp;
+        private final String message;
+        private final HttpStatus status;
+        private final LocalDateTime timestamp;
 
         public ErrorResponse(String message, HttpStatus status) {
             this.message = message;
@@ -68,5 +68,11 @@ public class GlobalExceptionHandler extends RuntimeException {
     public ResponseEntity<ErrorResponse> handleFailedToSendEmailException(FailedToSendEmailException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.GATEWAY_TIMEOUT);
         return new ResponseEntity<>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
+    }
+
+    @ExceptionHandler(PasswordResetLinkExpiredException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordResetLinkExpiredException(PasswordResetLinkExpiredException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
