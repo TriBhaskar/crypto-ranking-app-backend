@@ -120,7 +120,7 @@ public class UserService {
         }
 
         Optional<CoinUser> user = userRepository.findByEmail(email);
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
 

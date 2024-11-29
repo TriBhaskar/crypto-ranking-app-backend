@@ -29,7 +29,6 @@ public class UserController {
     }
     @PostMapping("/test")
     public ResponseEntity<ApiResponse> testmore(@RequestBody String test) {
-        System.out.println("Tested successfully");
         return ResponseEntity.ok(new ApiResponse("success", "Tested successfully"));
     }
 
@@ -48,18 +47,11 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse> resetPassword(
-            @RequestParam String token,
-            @RequestParam String newPassword) {
-        try {
-            userService.resetPassword(token, newPassword);
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+            userService.resetPassword(request.getToken(), request.getNewPassword());
             return ResponseEntity.ok(new ApiResponse(
                     "success",
                     "Password has been reset successfully"
             ));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("error", e.getMessage()));
-        }
     }
 }
