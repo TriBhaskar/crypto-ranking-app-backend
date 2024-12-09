@@ -27,4 +27,19 @@ public class EmailService {
             throw new RuntimeException("Failed to process password reset request");
         }
     }
+
+    public void sendOtpEmail(String to, String otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("OTP for Email Verification");
+        message.setText("Your OTP for email verification is: " + otp);
+
+        try {
+            mailSender.send(message);
+            System.out.println("Email sent successfully");
+        } catch (MailException e) {
+            System.err.println("Failed to send email: " + e.getMessage());
+            throw new RuntimeException("Failed to process email verification request");
+        }
+    }
 }

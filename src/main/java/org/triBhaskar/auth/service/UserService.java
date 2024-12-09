@@ -23,7 +23,7 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class.getName());
 
     @Autowired
     private UserRepository userRepository;
@@ -43,6 +43,9 @@ public class UserService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private OtpService otpService;
+
     public CoinUser registerUser(RegisterRequest registerRequest) {
         logger.info("Registering user with username: {}", registerRequest.getUsername());
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
@@ -61,9 +64,40 @@ public class UserService {
         user.setLastName(registerRequest.getLastName());
         user.setRole(Role.ROLE_USER);
 
+        String otp = otpService.generateOtp();
+        otpService.saveOtp(user.getEmail(),otp);
         CoinUser savedUser = userRepository.save(user);
         logger.info("User registered successfully with username: {}", savedUser.getUsername());
+        try {
+            emailService.sendOtpEmail(user.getEmail(), otp);
+            logger.info("OTP sent successfully to email: {}", user.getEmail());
+        } catch (Exception e) {
+            logger.error("Failed to send OTP to email: {}", user.getEmail(), e);
+            throw new FailedToSendEmailException("Failed to send OTP to email");
+        }
         return savedUser;
+    }
+
+    public void verifyEmail(String email, String otp) {
+        logger.info("Verifying email for email: {}", email);
+        String savedOtp = otpService.getOtp(email);
+        if (savedOtp == null) {
+            logger.warn("OTP not found for email: {}", email);
+            throw new OtpNotFoundException("OTP not found");
+        }
+        if (!savedOtp.equals(otp)) {
+            logger.warn("Invalid OTP for email: {}", email);
+            throw new InvalidOtpException("Invalid OTP");
+        }
+        otpService.deleteOtp(email);
+        Optional<CoinUser> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            logger.warn("User not found with email: {}", email);
+            throw new UserNotFoundException("User not found");
+        }
+        user.get().setEmailVerified(true);
+        userRepository.save(user.get());
+        logger.info("Email verified successfully for email: {}", email);
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
@@ -89,12 +123,19 @@ public class UserService {
             throw new InvalidCredentialsException("Password is incorrect");
         }
 
+        if (!user.get().isEmailVerified()) {
+            logger.warn("Email is not verified for user: {}", user.get().getUsername());
+            throw new UserNotVerifiedException("Email is not verified");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.get().getUsername(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         LoginResponse response = new LoginResponse("success", "User logged in successfully", user.get().getUsername(), tokenProvider.generateToken(authentication), LocalDateTime.now());
+        user.get().setLastLogin(LocalDateTime.now());
+        userRepository.save(user.get());
         logger.info("User logged in successfully with username: {}", user.get().getUsername());
         return response;
     }

@@ -49,6 +49,12 @@ public class CoinUser {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
+
+    @Column(name = "verification_expiry")
+    private LocalDateTime verificationExpiry;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -126,5 +132,21 @@ public class CoinUser {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public LocalDateTime getVerificationExpiry() {
+        return verificationExpiry;
+    }
+
+    public void setVerificationExpiry(LocalDateTime verificationExpiry) {
+        this.verificationExpiry = verificationExpiry;
     }
 }

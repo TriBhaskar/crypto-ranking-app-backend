@@ -22,4 +22,12 @@ public class Utility {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+    //write a utility method which will make email like eg. rohitabc123@gmail.com to roh*****23@gmail.com
+
+    public static String maskEmail(String email) {
+        String[] emailParts = email.split("@");
+        String maskedEmail = emailParts[0].substring(0, 3) + "*****" + emailParts[0].substring(emailParts[0].length() - 2) + "@" + emailParts[1];
+        return maskedEmail;
+    }
 }

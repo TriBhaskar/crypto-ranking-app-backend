@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.triBhaskar.auth.entity.CoinUser;
 import org.triBhaskar.auth.model.*;
 import org.triBhaskar.auth.service.UserService;
+import org.triBhaskar.utils.Utility;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,20 @@ public class UserController {
         logger.info("Register request received for username: {}", registerRequest.getUsername());
         CoinUser coinUser = userService.registerUser(registerRequest);
         logger.info("User registered successfully: {}", coinUser.getUsername());
-        return ResponseEntity.ok(new RegisterResponse("success", "User registered successfully", coinUser.getUsername(), LocalDateTime.now()));
+        return ResponseEntity.ok(new RegisterResponse("success", "User registered successfully, " +
+                "Please Verify your email ["+ Utility.maskEmail(registerRequest.getEmail()) + "] with OTP sent",
+                coinUser.getUsername(), LocalDateTime.now()));
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<ApiResponse> verifyEmail(@RequestBody VerifyEmailRequest request) {
+        logger.info("Verify email request received for email: {}", request.getEmail());
+        userService.verifyEmail(request.getEmail(), request.getOtp());
+        logger.info("Email verified successfully for email: {}", request.getEmail());
+        return ResponseEntity.ok(new ApiResponse(
+                "success",
+                "Email verified successfully"
+        ));
     }
 
     @PostMapping("/login")
