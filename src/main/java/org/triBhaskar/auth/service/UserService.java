@@ -118,14 +118,14 @@ public class UserService {
             throw new InvalidCredentialsException("Identifier must be provided");
         }
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-            logger.warn("Password is incorrect for user: {}", user.get().getUsername());
-            throw new InvalidCredentialsException("Password is incorrect");
-        }
-
         if (!user.get().isEmailVerified()) {
             logger.warn("Email is not verified for user: {}", user.get().getUsername());
             throw new UserNotVerifiedException("Email is not verified");
+        }
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
+            logger.warn("Password is incorrect for user: {}", user.get().getUsername());
+            throw new InvalidCredentialsException("Password is incorrect");
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -145,6 +145,10 @@ public class UserService {
         Optional<CoinUser> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
+            if(!user.get().isEmailVerified()){
+                logger.warn("Email is not verified for user: {}", user.get().getUsername());
+                throw new UserNotVerifiedException("Email is not verified");
+            }
             if (tokenService.isRateLimited(email)) {
                 logger.warn("Too many password reset attempts for email: {}", email);
                 throw new ToMannyAttemptsException("Too many password reset attempts. Please try again later.");
