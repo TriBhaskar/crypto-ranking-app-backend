@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.triBhaskar.exception.DataBaseConnectionException;
 
 @Configuration
 public class DataSourceConfig {
@@ -42,18 +43,18 @@ public class DataSourceConfig {
             } catch (Exception e) {
                 attempt++;
                 if (attempt >= MAX_RETRIES) {
-                    throw new RuntimeException("Failed to connect to the database after " + MAX_RETRIES + " attempts", e);
+                    throw new DataBaseConnectionException("Failed to connect to the database after " + MAX_RETRIES + " attempts "+e.getMessage());
                 }
                 try {
                     log.warn("Failed to connect to the database.... Retrying connection to the database");
                     Thread.sleep(30000); // Sleep for 30 seconds before retrying
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
-                    throw new RuntimeException("Thread interrupted during sleep", ie);
+                    throw new DataBaseConnectionException("Thread interrupted during sleep"+ ie.getMessage());
                 }
             }
         }
-        throw new RuntimeException("Failed to connect to the database");
+        throw new DataBaseConnectionException("Failed to connect to the database");
     }
 
     @Bean
