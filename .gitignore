@@ -38,4 +38,5 @@ build/
 ### Mac OS ###
 .DS_Store
 /.idea/
-/src/main/resources/application.properties
+/crypto-ranking-backend/src/main/resources/application.properties
+/crypto-ranking-assembly/src/assembly/resources/config/application.properties
