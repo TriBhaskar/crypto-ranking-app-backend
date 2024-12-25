@@ -43,6 +43,7 @@ public class CoinsDataService {
         Coins coins = response.getBody();
         log.info("Coins data fetched: {}", coins);
         storeCoinsToRedis(coins);
+        //Store Coins in Database
     }
     public void fetchCoinHistory(){
         log.info("Fetching coin history data");
@@ -87,7 +88,6 @@ public class CoinsDataService {
     private void storeCoinsToRedis(Coins coins) throws JsonProcessingException {
         log.info("Storing coins data to Redis");
         client.jsonSet(REDIS_KEY_COINS, gson.toJson(coins));
-
     }
 
     public List<CoinInfo> fetchAllCoinsFromRedisJSON() {

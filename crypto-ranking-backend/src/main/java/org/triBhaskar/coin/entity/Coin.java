@@ -1,26 +1,49 @@
-package org.triBhaskar.coin.model;
+package org.triBhaskar.coin.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
-public class CoinInfo {
+@Entity
+@Table(name = "coins")
+public class Coin {
+
+    @Id
+    @Column(name = "uuid", nullable = false, unique = true)
     private String uuid;
+
+    @Column(name = "symbol", nullable = false)
     private String symbol;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "color")
     private String color;
+
+    @Column(name = "icon_url")
     private String iconUrl;
-    private String marketCap;
-    private String price;
+
+    @Column(name = "listed_at")
     private Integer listedAt;
+
+    @Column(name = "tier")
     private Integer tier;
-    private String change;
+
+    @Column(name = "rank")
     private Integer rank;
-    private List<String> sparkline = new ArrayList<>();
+
+    @Column(name = "low_volume")
     private Boolean lowVolume;
+
+    @Column(name = "coinranking_url")
     private String coinrankingUrl;
-    private String _24hVolume;
-    private String btcPrice;
+
+    @Column(name = "btc_price")
+    private BigDecimal btcPrice;
 
     public String getUuid() {
         return uuid;
@@ -62,22 +85,6 @@ public class CoinInfo {
         this.iconUrl = iconUrl;
     }
 
-    public String getMarketCap() {
-        return marketCap;
-    }
-
-    public void setMarketCap(String marketCap) {
-        this.marketCap = marketCap;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public Integer getListedAt() {
         return listedAt;
     }
@@ -94,28 +101,12 @@ public class CoinInfo {
         this.tier = tier;
     }
 
-    public String getChange() {
-        return change;
-    }
-
-    public void setChange(String change) {
-        this.change = change;
-    }
-
     public Integer getRank() {
         return rank;
     }
 
     public void setRank(Integer rank) {
         this.rank = rank;
-    }
-
-    public List<String> getSparkline() {
-        return sparkline;
-    }
-
-    public void setSparkline(List<String> sparkline) {
-        this.sparkline = sparkline;
     }
 
     public Boolean getLowVolume() {
@@ -134,19 +125,28 @@ public class CoinInfo {
         this.coinrankingUrl = coinrankingUrl;
     }
 
-    public String get_24hVolume() {
-        return _24hVolume;
-    }
-
-    public void set_24hVolume(String _24hVolume) {
-        this._24hVolume = _24hVolume;
-    }
-
-    public String getBtcPrice() {
+    public BigDecimal getBtcPrice() {
         return btcPrice;
     }
 
-    public void setBtcPrice(String btcPrice) {
+    public void setBtcPrice(BigDecimal btcPrice) {
         this.btcPrice = btcPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Coin{" +
+                "uuid='" + uuid + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", listedAt=" + listedAt +
+                ", tier=" + tier +
+                ", rank=" + rank +
+                ", lowVolume=" + lowVolume +
+                ", coinrankingUrl='" + coinrankingUrl + '\'' +
+                ", btcPrice=" + btcPrice +
+                '}';
     }
 }

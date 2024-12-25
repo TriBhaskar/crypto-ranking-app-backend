@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class CoinUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long id;
 
     @NotBlank
