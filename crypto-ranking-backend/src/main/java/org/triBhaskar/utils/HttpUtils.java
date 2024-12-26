@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import java.util.Collections;
 
 public class HttpUtils {
-    @Value("${api.host}")
+    @Value("${coin.api.host}")
     private static String apiHost;
-    @Value("${api.key}")
+    @Value("${coin.api.key}")
     private static String apiKey;
 
     public static HttpEntity<String> getHttpEntity() {

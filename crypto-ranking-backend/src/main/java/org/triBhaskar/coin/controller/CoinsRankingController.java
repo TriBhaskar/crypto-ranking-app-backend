@@ -24,11 +24,11 @@ public class CoinsRankingController {
 
     @GetMapping
     public ResponseEntity<List<CoinInfo>> fetchAllCoins() {
-        return ResponseEntity.ok().body(coinsDataService.fetchAllCoinsFromRedisJSON());
+        return ResponseEntity.ok().body(coinsDataService.getAllCoins());
     }
     @GetMapping("/{symbol}/{timePeriod}")
     public List<HistoryData> fetchCoinHistoryPerTimePeriod(@PathVariable String symbol, @PathVariable String timePeriod) {
-        List<TSElement> coinsTSData = coinsDataService.fetchCoinHistoryPerTimePeriodFromRedisTS(symbol, timePeriod);
+        List<TSElement> coinsTSData = coinsDataService.getCoinHistory(symbol, timePeriod);
         List<HistoryData> coinHistory = new ArrayList<>();
         for (TSElement tsElement : coinsTSData) {
             HistoryData historyData = new HistoryData(Utility.convertUnixTimeToDate(tsElement.getTimestamp()), Utility.round(tsElement.getValue(), 2));
