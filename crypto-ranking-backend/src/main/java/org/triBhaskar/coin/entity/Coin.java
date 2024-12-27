@@ -43,7 +43,7 @@ public class Coin {
     private String coinrankingUrl;
 
     @Column(name = "btc_price")
-    private BigDecimal btcPrice;
+    private String btcPrice;
 
     public String getUuid() {
         return uuid;
@@ -125,11 +125,11 @@ public class Coin {
         this.coinrankingUrl = coinrankingUrl;
     }
 
-    public BigDecimal getBtcPrice() {
+    public String getBtcPrice() {
         return btcPrice;
     }
 
-    public void setBtcPrice(BigDecimal btcPrice) {
+    public void setBtcPrice(String btcPrice) {
         this.btcPrice = btcPrice;
     }
 

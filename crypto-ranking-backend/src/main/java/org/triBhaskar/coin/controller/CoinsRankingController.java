@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.triBhaskar.coin.entity.Coin;
 import org.triBhaskar.coin.model.CoinInfo;
 import org.triBhaskar.coin.model.HistoryData;
 import org.triBhaskar.coin.service.CoinsDataService;
@@ -23,11 +24,12 @@ public class CoinsRankingController {
     private CoinsDataService coinsDataService;
 
     @GetMapping
-    public ResponseEntity<List<CoinInfo>> fetchAllCoins() {
+    public ResponseEntity<List<Coin>> fetchAllCoins() {
         return ResponseEntity.ok().body(coinsDataService.getAllCoins());
     }
     @GetMapping("/{symbol}/{timePeriod}")
     public List<HistoryData> fetchCoinHistoryPerTimePeriod(@PathVariable String symbol, @PathVariable String timePeriod) {
+        System.out.println("Fetching coin history for symbol: " + symbol + " and period: " + timePeriod);
         List<TSElement> coinsTSData = coinsDataService.getCoinHistory(symbol, timePeriod);
         List<HistoryData> coinHistory = new ArrayList<>();
         for (TSElement tsElement : coinsTSData) {

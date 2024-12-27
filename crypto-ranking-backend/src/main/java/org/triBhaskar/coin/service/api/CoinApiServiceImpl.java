@@ -21,6 +21,10 @@ public class CoinApiServiceImpl implements CoinApiService {
 
     @Value("${coin.api.limit:50}")
     private int coinLimit;
+    @Value("${coin.api.host}")
+    private String apiHost;
+    @Value("${coin.api.key}")
+    private String apiKey;
     private final RestTemplate restTemplate;
 
     public CoinApiServiceImpl(RestTemplate restTemplate) {
@@ -34,7 +38,7 @@ public class CoinApiServiceImpl implements CoinApiService {
         ResponseEntity<Coins> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
-                HttpUtils.getHttpEntity(),
+                HttpUtils.getHttpEntity(apiHost, apiKey),
                 Coins.class
         );
         log.info("Coins data fetched successfully");
@@ -48,7 +52,7 @@ public class CoinApiServiceImpl implements CoinApiService {
         ResponseEntity<CoinPriceHistory> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
-                HttpUtils.getHttpEntity(),
+                HttpUtils.getHttpEntity(apiHost, apiKey),
                 CoinPriceHistory.class
         );
         log.info("Coin history fetched successfully");

@@ -6,10 +6,12 @@ import org.triBhaskar.coin.model.Coins;
 import redis.clients.jedis.timeseries.TSElement;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CoinRedisService {
-    void storeCoins(Coins coins);
     void storeCoinHistory(String symbol, String timePeriod, CoinPriceHistory history);
-    List<CoinInfo> getAllCoins();
     List<TSElement> getCoinHistory(String symbol, String timePeriod);
+    Long getLastUpdateTime(String symbol, String period);
+    boolean hasCoinHistory();
+    Set<String> getAllHistoryKeys();
 }
