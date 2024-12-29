@@ -63,7 +63,7 @@ public class CoinsDataService {
                 });
                 log.info("Initial data load completed to database for {} coins", coins.getData().getCoins().size());
             }else {
-                log.info("Initialization not needed");
+                log.info("Initialization not needed on database");
             }
             if (!coinHistoryExists) {
                 log.info("No coin history found in Redis. Starting initial history load...");
@@ -71,7 +71,7 @@ public class CoinsDataService {
                 List<Coin> coins = getCoinInfos();
                 log.info("Initial history load completed for {} coins", coins.size());
             } else {
-                log.info("Initialization not needed");
+                log.info("Initialization not needed on Redis");
 
             }
         } catch (Exception e) {
@@ -96,7 +96,7 @@ public class CoinsDataService {
         return allCoins;
     }
 
-//    @Scheduled(fixedRate = 300000) // 5 minutes
+    @Scheduled(cron = "${coin.api.highfrequenceyperiod.cron:0 0 0/3 * * *}")
     public void syncRecentData() {
         try {
             log.info("Starting recent data sync");
@@ -110,7 +110,7 @@ public class CoinsDataService {
         }
     }
 
-//    @Scheduled(cron = "0 0 */6 * * *") // Every 6 hours
+    @Scheduled(cron = "${coin.api.mediumfrequenceyperiod.cron:0 0 10 ? * SUN}")
     public void syncMediumTermData() {
         try {
             log.info("Starting medium-term data sync");
@@ -126,7 +126,7 @@ public class CoinsDataService {
         }
     }
 
-//    @Scheduled(cron = "0 0 0 * * *") // Once a day at midnight
+    @Scheduled(cron = "${coin.api.lowfrequenceyperiod.cron:0 0 0 1 1 ?}")
     public void syncLongTermData() {
         try {
             log.info("Starting long-term data sync");
