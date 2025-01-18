@@ -55,6 +55,22 @@ public class UserController {
     }
 
     /**
+     * Resends the OTP to the user's email.
+     *
+     * @param request the resend OTP request containing the user's email
+     * @return a response entity containing the API response
+     */
+    @PostMapping("/resend-otp")
+    public ResponseEntity<ApiResponse> resendOtp(@RequestBody ResendOtpRequest request) {
+        logger.info("Resend OTP request received for email: {}", request.getEmail());
+        userService.resendOtp(request);
+        return ResponseEntity.ok(new ApiResponse(
+                "success",
+                "OTP resent successfully"
+        ));
+    }
+
+    /**
      * Logs in a user.
      *
      * @param loginRequest the login request containing user credentials

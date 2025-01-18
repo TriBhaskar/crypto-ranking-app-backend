@@ -6,6 +6,7 @@ public class RegisterResponse {
     private String status;
     private String message;
     private String username;
+    private long otpValiditySeconds;
     private LocalDateTime timestamp;
 
     public RegisterResponse(String status, String message, String username, LocalDateTime timestamp) {
@@ -39,6 +40,14 @@ public class RegisterResponse {
         this.username = username;
     }
 
+    public long getOtpValiditySeconds() {
+        return otpValiditySeconds;
+    }
+
+    public void setOtpValiditySeconds(long otpValiditySeconds) {
+        this.otpValiditySeconds = otpValiditySeconds;
+    }
+
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
@@ -47,13 +56,4 @@ public class RegisterResponse {
         this.timestamp = timestamp;
     }
 
-    @Override
-    public String toString() {
-        return "RegisterResponse{" +
-                "status='" + status + '\'' +
-                ", message='" + message + '\'' +
-                ", username='" + username + '\'' +
-                ", timestamp=" + timestamp +
-                '}';
-    }
 }

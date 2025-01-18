@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/test",
                                 "/api/v1/user/register","/api/v1/user/login",
                                 "/api/v1/user/forgot-password","/api/v1/user/reset-password",
-                                "/api/v1/user/verify-email"
+                                "/api/v1/user/verify-email","/api/v1/user/resend-otp"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/user/**").hasRole("USER")

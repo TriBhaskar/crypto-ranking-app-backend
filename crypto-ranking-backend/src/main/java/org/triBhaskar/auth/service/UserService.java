@@ -191,4 +191,38 @@ public class UserService {
         tokenService.deleteToken(token);
         logger.info("Password reset successfully for email: {}", email);
     }
+
+    public void resendOtp(ResendOtpRequest request) {
+        logger.info("Resending OTP for email: {}", request.getEmail());
+        Optional<CoinUser> user = userRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) {
+            logger.warn("User not found with email: {}", request.getEmail());
+            throw new UserNotFoundException("User not found");
+        }
+        if (user.get().isEmailVerified()) {
+            logger.warn("Email is already verified for user: {}", user.get().getUsername());
+            throw new UserAlreadyVerifiedException("Email is already verified");
+        }
+
+        String otpCountKey = "otp_count_" + request.getEmail();
+        String otpCountStr = otpService.getOtp(otpCountKey);
+        int otpCount = otpCountStr == null ? 0 : Integer.parseInt(otpCountStr);
+
+        if (otpCount >= 3) {
+            logger.warn("OTP resend limit reached for email: {}", request.getEmail());
+            throw new TooManyOtpRequestsException("OTP resend limit reached. Please try again later.");
+        }
+
+        String otp = otpService.generateOtp();
+        otpService.saveOtp(request.getEmail(), otp);
+        otpService.saveOtp(otpCountKey, String.valueOf(otpCount + 1));
+
+        try {
+            emailService.sendOtpEmail(request.getEmail(), otp);
+            logger.info("OTP sent successfully to email: {}", request.getEmail());
+        } catch (Exception e) {
+            logger.error("Failed to send OTP to email: {}", request.getEmail(), e);
+            throw new FailedToSendEmailException("Failed to send OTP to email");
+        }
+    }
 }
