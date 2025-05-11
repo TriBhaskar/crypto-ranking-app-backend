@@ -12,14 +12,18 @@ import com.tribhaskar.utils.Utility;
 
 import java.time.LocalDateTime;
 @CrossOrigin("*")
-@RequestMapping("/api/v1/user")
+@RequestMapping(ApiPaths.USER_API_PREFIX)
 @RestController
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Registers a new user.

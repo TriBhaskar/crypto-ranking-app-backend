@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import redis.clients.jedis.Connection;
@@ -26,6 +29,8 @@ public class RedisConfig {
     private String host;
     @Value("${redis.port}")
     private int port;
+    @Value("${redis.username}")
+    private String username;
     @Value("${redis.password}")
     private String password;
     @Value("${redis.timeout}")
@@ -45,6 +50,19 @@ public class RedisConfig {
     }
 
     @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
+        config.setUsername(username);
+        config.setPassword(password);
+
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(config);
+        factory.afterPropertiesSet();
+        return factory;
+    }
+
+    @Bean
     public JedisPooled jedisPool() {
         int maxRetries = 5;
         int retryCount = 0;
@@ -54,13 +72,13 @@ public class RedisConfig {
                 poolConfig.setMinIdle(minIdle);
                 poolConfig.setMaxIdle(maxIdle);
                 poolConfig.setMaxTotal(maxTotal);
-                JedisPooled cachejedisPooled = new JedisPooled(poolConfig, host, port, timeout, password, useSsl);
+                cachejedisPooled = new JedisPooled(poolConfig, host, port, timeout, password, useSsl);
                 String ping = cachejedisPooled.ping();
                 log.info("Successfully connected to Redis: {}", ping);
                 return cachejedisPooled;
             } catch (Exception e) {
                 retryCount++;
-                log.error("Attempt" +retryCount +" of "+maxRetries+ "failed to connect to Redis:"+ e.getMessage());
+                log.error("Attempt{} of {}failed to connect to Redis:{}", retryCount, maxRetries, e.getMessage());
 
                 if (retryCount >= maxRetries) {
                     throw new RuntimeException("Failed to connect to Redis after " + maxRetries + " attempts", e);

@@ -1,5 +1,6 @@
 package com.tribhaskar.auth.security;
 
+import com.tribhaskar.auth.controller.ApiPaths;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,17 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final String[] skipAuthorizationForRequests = {
+            ApiPaths.USER_LOGIN,
+            ApiPaths.USER_REGISTER,
+            ApiPaths.USER_FORGOT_PASSWORD,
+            ApiPaths.USER_VERIFY_EMAIL,
+            ApiPaths.USER_RESEND_OTP,
+            ApiPaths.USER_RESET_PASSWORD,
+            ApiPaths.USER_TEST,
+            "/coinRank/actuator/health", "/api/v1/coins","/api/v1/coins/**"
+    };
+
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
@@ -38,14 +50,10 @@ public class SecurityConfig {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/user/test",
-                                "/api/v1/user/register","/api/v1/user/login",
-                                "/api/v1/user/forgot-password","/api/v1/user/reset-password",
-                                "/api/v1/user/verify-email","/api/v1/user/resend-otp","/actuator/health"
+                        .requestMatchers(skipAuthorizationForRequests
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
-                        .requestMatchers("/actuator/health", "/api/v1/coins","/api/v1/coins/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

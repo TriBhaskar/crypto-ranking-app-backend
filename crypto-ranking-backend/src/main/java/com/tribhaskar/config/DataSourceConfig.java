@@ -18,8 +18,12 @@ public class DataSourceConfig {
     private static final int MAX_RETRIES = 5;
     private static final int RETRY_DELAY_MS = 2000;
 
+    private final DataSourceProperties dataSourceProperties;
+
     @Autowired
-    private DataSourceProperties dataSourceProperties;
+    public DataSourceConfig(DataSourceProperties dataSourceProperties) {
+        this.dataSourceProperties = dataSourceProperties;
+    }
 
     @Bean
     @Primary
